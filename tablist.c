@@ -51,7 +51,7 @@ int tlist_add(tlist_t* l, int a, int b) {
         if ((l->size) == 0){
             (l->first)=0;
             int prevlast=0 ;
-            int newlast=0;
+            int newlast=1;
         }
         else {
             int newlast = ind_libre(l);
@@ -137,7 +137,7 @@ int tlist_swap(tlist_t* l, int i, int j) {
 double dist(elem_t a){
     double x=(double)(a.x) ;
     double y=(double)(a.y) ;
-    return (x*x+ y*y);
+    return (x*x + y*y);
 }
 
 bool est_str_avant(tlist_t *l, int i, int j){
@@ -186,6 +186,7 @@ int tlist_print(tlist_t* l){
     printf("\n");
     return compt;
 }
+
 
 int main() {
     tlist_t* l=tlist_new();

@@ -26,6 +26,16 @@ int tlist_print(tlist_t* l){
     return compt;
 }
 
+int tab_print(tlist_t* l){
+    for(int i=0; i<MAX_CAP; ++i){
+        if (l->tab[i].is_free)
+            printf("(%d,%d,next=%d,prev=%d) ",(l->tab)[i].x,(l->tab)[i].y,(l->tab)[i].next,(l->tab)[i].prev);
+        
+    }
+    printf("\n");
+    return 0;
+}
+
 tlist_t *tlist_new() {
     tlist_t *l = malloc(sizeof(tlist_t));
     (l->size) = 0;
@@ -127,11 +137,29 @@ int tlist_push(tlist_t* l, int x, int y){
     return 1;
 }
 
+
+double dist(elem_t a){
+    double x=(double)(a.x) ;
+    double y=(double)(a.y) ;
+    return (x*x + y*y);
+}
+
+bool est_str_avant(tlist_t *l, int i, int j){
+    if (i==(l->last))
+            return false;
+    while (j != (l->last)){
+        j=(l->tab)[j].next;
+        if (j==i)
+            return false;
+    }
+    return true ;
+}
+
 int tlist_swap(tlist_t* l, int i, int j) {
     if ((l->size >= i) && (l->size >= j)){
         int indi=-1;
         int indj=-1;
-        for(int k=(l->first), compt=1;(indj==-1)||(indi==-1);k=(l->tab)[k].next, ++compt){
+        for(int k=(l->first),compt=0 ;(indj==-1)||(indi==-1);k=(l->tab)[k].next,++compt){
             if (compt==i) {
                 indi=k;
             }
@@ -140,25 +168,72 @@ int tlist_swap(tlist_t* l, int i, int j) {
             }
         } 
         printf("%d,%d\n",indi,indj);
+        elem_t temp ;
+        temp.x=(l->tab)[indi].x;
+        temp.y=(l->tab)[indi].y;
+        temp.is_free=(l->tab)[indi].is_free;
+        temp.next=(l->tab)[indi].next;
+        temp.prev=(l->tab)[indi].prev;
+
         (l->tab)[indi].x=(l->tab)[indj].x;
         (l->tab)[indi].y=(l->tab)[indj].y;
+        (l->tab)[indi].is_free=(l->tab)[indj].is_free;
+        (l->tab)[indi].next=(l->tab)[indj].next;
+        (l->tab)[indi].prev=(l->tab)[indj].prev;
+
+        (l->tab)[indj].x=temp.x;
+        (l->tab)[indj].y=temp.y;
+        (l->tab)[indj].is_free=temp.is_free;
+        (l->tab)[indj].next=temp.next;
+        (l->tab)[indj].prev=temp.prev;
         return 1 ;
     }
     return 0;
 }
 
+
+void quick_sort(tlist_t *l, int first, int last) {
+    int pivot, i, j;
+    pivot = first;
+    i = first;
+    j = last;
+    while (est_str_avant(l,i,j)) {
+        printf("Cas général \n");
+        while(dist((l->tab)[i]) <= dist((l->tab)[pivot]) && (i!=(l->last))){
+            i=(l->tab)[i].next;
+            printf("Cas 1 en cours \n");
+        }
+        while(dist((l->tab)[j]) > dist((l->tab)[pivot])){
+            j=(l->tab)[j].prev ;
+            printf("Cas 2 en cours \n");
+        }
+        if(est_str_avant(l,i,j)) {
+            tlist_swap(l,i,j);
+            printf("Cas 3 en cours \n");
+        }
+    }
+    tlist_swap(l,pivot,j);
+    quick_sort(l, first, (l->tab)[j].prev);
+    quick_sort(l, (l->tab)[j].next, last);
+}
+
+int tlist_sort(tlist_t* l){
+    if (l->size==0)
+        return 0;
+    quick_sort(l,(l->first),(l->last));
+    return 1;
+}
+
 int main() {
     tlist_t* l=tlist_new();
-    tlist_add(l,0,0);
-    tlist_add(l,0,0);
-    tlist_add(l,1,2);
     tlist_add(l,2,3);
     tlist_add(l,0,0);
-    tlist_print(l);
+    tlist_add(l,1,2);
+    tab_print(l);
     
-    tlist_swap(l,3,4);
+    tlist_swap(l,2,12);
     
-    tlist_print(l);
+    tab_print(l);
     return 0 ;
 }
 
