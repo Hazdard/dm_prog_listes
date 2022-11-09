@@ -250,10 +250,8 @@ elem_t extract(char* str){
             abs[i]=str[i];
         }
         if (i>taille_abs){
-                ord[i]=str[i];
-                printf("%c\n",ord[i]);
+            ord[i-(taille_abs+1)]=str[i];
         }
-            
     }
     int x = atoi(abs);
     int y = atoi(ord);
@@ -264,13 +262,15 @@ elem_t extract(char* str){
 
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) { /* Le passage en argument se fait de la façon suivante : ./tablist 3,7 9,12 21,33 */
     tlist_t* l=tlist_new();
     for(int i=1; i<argc; i++){
         elem_t retour = extract(argv[i]);
         tlist_add(l,retour.x,retour.y);
     }
+    tlist_sort(l);
     tlist_print(l);
+    tlist_free(l);
     return 0 ;
 }
 
