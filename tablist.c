@@ -151,7 +151,7 @@ int tlist_push(tlist_t* l, int x, int y){
 int dist(elem_t a){
     int abs=a.x;
     int ord = a.y ;
-    return ( abs*abs + ord*ord);
+    return (abs*abs + ord*ord);
 }
 
 elem_t acces(tlist_t *l, int i){
@@ -229,19 +229,47 @@ int tlist_print(tlist_t* l){
     return compt;
 }
 
+elem_t extract(char* str){
+    int taille_abs=0 ;
+    int taille_ord=0 ;
+    bool avant=true;
+    for(int i=0; str[i]!='\0' ;++i){
+        if (str[i]==',') 
+            avant=false;
+        else {
+            if (avant) 
+                taille_abs++;
+            else 
+                taille_ord++;
+        }
+    }
+    char abs[taille_abs];
+    char ord[taille_ord];
+    for(int i=0; str[i]!='\0'; ++i){
+        if (i<taille_abs){
+            abs[i]=str[i];
+        }
+        if (i>taille_abs){
+                ord[i]=str[i];
+                printf("%c\n",ord[i]);
+        }
+            
+    }
+    int x = atoi(abs);
+    int y = atoi(ord);
+    elem_t retour ;
+    retour.x=x;
+    retour.y=y;
+    return retour ;
 
-int main() {
+}
+
+int main(int argc, char* argv[]) {
     tlist_t* l=tlist_new();
-    tlist_push(l,0,1);
-    tlist_push(l,0,3);
-    tlist_push(l,0,7);
-    tlist_push(l,0,8);
-    tlist_push(l,0,2);
-    tlist_push(l,0,4);
-    tlist_push(l,0,5);
-    tlist_push(l,0,6);
-    tlist_print(l);
-    tlist_sort(l);
+    for(int i=1; i<argc; i++){
+        elem_t retour = extract(argv[i]);
+        tlist_add(l,retour.x,retour.y);
+    }
     tlist_print(l);
     return 0 ;
 }
