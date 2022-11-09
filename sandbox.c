@@ -5,10 +5,26 @@
 #define MAX_CAP 100 
 
 typedef struct elem_s elem_t; 
-struct elem_s { int x ; int y ; bool is_free ; int next ; int prev ; } ;
+struct elem_s {
+    int     x;
+    int     y;
+    bool    is_free;
+    int     next;
+    int     prev;
+};
 
 typedef struct tlist_s tlist_t; 
 struct tlist_s {elem_t tab[MAX_CAP]; int size ; int first ; int last ; } ;
+
+
+int tlist_print(tlist_t* l){
+    int compt = 0 ;
+    for(int i=(l->first); compt<(l->size) ; i=(l->tab)[i].next, ++compt){
+        printf("(%d,%d) ",(l->tab)[i].x,(l->tab)[i].y);
+    }
+    printf("\n");
+    return compt;
+}
 
 tlist_t *tlist_new() {
     tlist_t *l = malloc(sizeof(tlist_t));
@@ -117,30 +133,18 @@ int tlist_swap(tlist_t* l, int i, int j) {
         int indj=-1;
         for(int k=(l->first), compt=1;(indj==-1)||(indi==-1);k=(l->tab)[k].next, ++compt){
             if (compt==i) {
-                printf("%d pour i \n",k);
                 indi=k;
             }
             if (compt==j){
-                printf("%d pour j \n",k);
                 indj=k;
             }
         } 
         printf("%d,%d\n",indi,indj);
-        elem_t temp=(l->tab)[indi] ;
-        (l->tab)[indi]=(l->tab)[indj];
-        (l->tab)[indj]=temp;
+        (l->tab)[indi].x=(l->tab)[indj].x;
+        (l->tab)[indi].y=(l->tab)[indj].y;
         return 1 ;
     }
     return 0;
-}
-
-int tlist_print(tlist_t* l){
-    int compt = 0 ;
-    for(int i=(l->first); compt<(l->size) ; i=(l->tab)[i].next, ++compt){
-        printf("(%d,%d) ",(l->tab)[i].x,(l->tab)[i].y);
-    }
-    printf("\n");
-    return compt;
 }
 
 int main() {
