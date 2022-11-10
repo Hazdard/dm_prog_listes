@@ -48,7 +48,7 @@ int ind_libre(tlist_t *l){
         if ((l->tab)[i].is_free==false)
             return i ;
     }
-    return -42 ;
+    return 0 ;
 }
 int tlist_add(tlist_t* l, int a, int b) {
     if ((l->size) == MAX_CAP)
@@ -60,8 +60,8 @@ int tlist_add(tlist_t* l, int a, int b) {
             (l->tab)[0].x=a;
             (l->tab)[0].y=b;
             (l->tab)[0].is_free=true;
-            (l->tab)[0].prev=-42;
-            (l->tab)[0].next=-42;
+            (l->tab)[0].prev=0;
+            (l->tab)[0].next=0;
             ++(l->size);
         }
         else {
@@ -73,7 +73,7 @@ int tlist_add(tlist_t* l, int a, int b) {
             (l->tab)[newlast].y=b;
             (l->tab)[newlast].is_free=true;
             (l->tab)[newlast].prev=prevlast;
-            (l->tab)[newlast].next=-42;
+            (l->tab)[newlast].next=0;
             ++(l->size);
         }
         
@@ -126,8 +126,8 @@ int tlist_push(tlist_t* l, int x, int y){
             (l->tab)[0].x=x;
             (l->tab)[0].y=y;
             (l->tab)[0].is_free=true;
-            (l->tab)[0].prev=-42;
-            (l->tab)[0].next=-42;
+            (l->tab)[0].prev=0;
+            (l->tab)[0].next=0;
             ++(l->size);
         }
         else {
@@ -138,7 +138,7 @@ int tlist_push(tlist_t* l, int x, int y){
             (l->tab)[newfirst].x=x;
             (l->tab)[newfirst].y=y;
             (l->tab)[newfirst].is_free=true;
-            (l->tab)[newfirst].prev=-42;
+            (l->tab)[newfirst].prev=0;
             (l->tab)[newfirst].next=prevfirst;
             ++(l->size);
         }
