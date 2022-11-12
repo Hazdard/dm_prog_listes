@@ -33,5 +33,22 @@ hlist_t* hlist_new(){
     pinf->is_pinf=true;
     pinf->prev=minf;
     pinf->next=pinf;
+
+    return l ;
 }
 
+void hlist_free(hlist_t *l){
+    hnode_t* n = l->head;
+    int etage = 1 ;
+    while((etage<l->height)||!(n->is_pinf)){
+        hnode_t* next_n=n->next;
+        free(n);
+        n=next_n;
+    }
+}
+
+int main(){
+    hlist_t* l = hlist_new();
+    hlist_free(l);
+    return 0;
+}
