@@ -179,15 +179,12 @@ void hlist_print(hlist_t* l){
     }
 }
 
-int main(){
+int main(int argc, char* argv[]){
     srandom(time(NULL));
     hlist_t* l = hlist_new();
-    hlist_add(l,42);
-    hlist_add(l,42);
-    hlist_add(l,42);
-    hlist_print(l);
-    hlist_remove(l,42);
-    printf("\n Après la suppression : \n");
+    for(int i=1; i<argc; ++i){
+        hlist_add(l,atoi(argv[i]));
+    }
     hlist_print(l);
     hlist_free(l);
     return 0;
