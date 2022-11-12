@@ -47,8 +47,33 @@ void hlist_free(hlist_t *l){
     }
 }
 
+/* Penser a remettre les crochets de path */
+
+int hlist_search(hlist_t *l, int v, hnode_t** path){
+    hnode_t* candidat = l->head ;
+    int etage = 1 ;
+    while(etage<=l->height){
+        while(!((candidat->next)->is_pinf)&&((candidat->next)->value <= v)){
+            candidat=candidat->next ;
+        }
+        path[etage]=candidat ;
+        ++etage ;
+        while(!(candidat->is_minf)){
+            candidat=candidat->next ;
+        }
+    }
+    return(!(candidat->is_minf)&&(candidat->value == v));
+}
+
+int hlist_add(hlist_t *l, int v){
+    
+}
+
 int main(){
     hlist_t* l = hlist_new();
+    int v = 42 ;
+    hnode_t** path = malloc(sizeof(hnode_t* [l->height]));
+    printf("Résultat de la recherche : %d\n",hlist_search(l,v,path));
     hlist_free(l);
     return 0;
 }
