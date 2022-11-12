@@ -39,14 +39,18 @@ hlist_t* hlist_new(){
     return l ;
 }
 
-void hlist_free(hlist_t *l){
-    hnode_t* n = l->head;
+int hlist_free(hlist_t *l){
+    hnode_t* to_free = l->head;
     int etage = 1 ;
-    while((etage<l->height)||!(n->is_pinf)){
-        hnode_t* next_n=n->next;
-        free(n);
-        n=next_n;
+    while(etage<=l->height){
+        hnode_t* next=to_free->next ;
+        free(to_free);
+        if((to_free->is_pinf)&&(etage==l->height))
+            free(l);
+            return 1 ;
+        to_free=next;
     }
+    return 0 ;
 }
 
 /* Penser a remettre les crochets de path */
@@ -95,29 +99,27 @@ int hlist_add(hlist_t *l, int v){
     int etage = l->height;
     srand(time(NULL));
     bool first = true ;
-    while((rand()%2)||first){
+    while(first||(rand()%2)){
+        first=false ;
         hnode_t* new = malloc(sizeof(hnode_t)); 
         new->value=v;
         new->is_minf=false;
         new->is_pinf=false;
         if(etage>=1){
             new->prev=path[etage];
-            new->next=path[etage]->next;
+            new->next=(path[etage]->next);
             if(etage<l->height)
                 new->proj=path[etage+1]->next ;
-            path[etage]->next=new;
             (path[etage]->next)->prev=new;
-            first=false ;
-            if(etage==1){
+            path[etage]->next=new;
+            if(etage==1)
                 hlist_add_layer(l);
-            }
             --etage;
         }
         else{
             new->prev=l->head;
             new->next=(l->head)->next;
-            new->proj=path[etage+1]->next;
-
+            new->proj=(((l->head)->next)->next)->next;
             ((l->head)->next)->prev=new;
             (l->head)->next=new;
             hlist_add_layer(l);
@@ -126,12 +128,28 @@ int hlist_add(hlist_t *l, int v){
     free(path);
     return 0;
 }
+void hlist_print(hlist_t* l){
+    hnode_t* to_print = l->head ;
+    int etage = 1 ;
+    while(etage<=l->height){
+        while(!to_print->is_pinf){
+            if(to_print->is_minf)
+                printf("-inf ");
+            else 
+                printf(" %d ",to_print->value);
+            to_print=to_print->next ;
+        }
+        printf(" +inf\n");
+        to_print=to_print->next ;
+        ++etage ;
+    }
+}
 
 int main(){
     hlist_t* l = hlist_new();
-    int v = 42 ;
-    hnode_t** path = malloc(sizeof(hnode_t* [l->height]));
-    printf("Résultat de la recherche : %d\n",hlist_search(l,v,path));
+    hlist_add(l,42);
+    hlist_add(l,37);
+    hlist_print(l);
     hlist_free(l);
     return 0;
 }
