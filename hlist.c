@@ -3,6 +3,9 @@
 #include <stdbool.h>
 #include <time.h>
 
+
+/* Question 1 */
+
 typedef struct hnode_s hnode_t; 
 struct hnode_s {
     int         value;
@@ -13,11 +16,17 @@ struct hnode_s {
     hnode_t*    proj ;
 };
 
+
+/* Question 2 */
+
 typedef struct hlist_s hlist_t; 
 struct hlist_s {
     hnode_t*    head;
     int         height;
 };
+
+
+/* Question 3 */
 
 hlist_t* hlist_new(){
     hlist_t* l = malloc(sizeof(hlist_t));
@@ -29,7 +38,7 @@ hlist_t* hlist_new(){
 
     minf->is_minf=true;
     minf->is_pinf=false;
-    minf->prev=minf;
+    minf->prev=minf;     /* L'antécédent du premier élément est lui même afin d'éviter les comportements non prévus, tout comme pour le dernier élément */
     minf->next=pinf;
 
     pinf->is_minf=false;
@@ -39,6 +48,9 @@ hlist_t* hlist_new(){
 
     return l ;
 }
+
+
+/* Question 4 */
 
 int hlist_free(hlist_t *l){
     hnode_t* to_free = l->head;
@@ -54,7 +66,8 @@ int hlist_free(hlist_t *l){
     return 0 ;
 }
 
-/* Penser a remettre les crochets de path */
+
+/* Question 5 */
 
 int hlist_search(hlist_t *l, int v, hnode_t** path){
     hnode_t* candidat = l->head ;
@@ -71,7 +84,10 @@ int hlist_search(hlist_t *l, int v, hnode_t** path){
     return(!(candidat->is_minf)&&(candidat->value == v));
 }
 
-void hlist_add_layer(hlist_t *l){
+
+/* Question 6 */
+
+void hlist_add_layer(hlist_t *l){  /* Fonction auxiliaire qui ajoute l'étage (-inf ; +inf) par dessus la liste l */
     hnode_t* minf = malloc(sizeof(hnode_t));
     hnode_t* pinf = malloc(sizeof(hnode_t));
 
@@ -129,12 +145,14 @@ int hlist_add(hlist_t *l, int v){
     return 0;
 }
 
+
+/* Question 7 */
+
 int hlist_remove(hlist_t *l, int v){
     hnode_t** path = malloc(sizeof(hnode_t [l->height]));
     hlist_search(l,v,path);
     int compt = 0 ;
     for(int etage = l->height; etage>=1; --etage){
-        
         if((path[etage]->next)->value==v){
             ++compt;
             hnode_t* old=path[etage]->next;
@@ -142,10 +160,9 @@ int hlist_remove(hlist_t *l, int v){
             hnode_t* new_next= path[etage]->next->next;
             new_prev->next=new_next;
             new_next->prev=new_prev;
-            
-            if(etage<l->height && path[etage]->is_minf && path[etage]->next->is_pinf){
+            if(etage<l->height && path[etage]->is_minf && path[etage]->next->is_pinf){ /* Si l'élément à supprimer est seul dans l'étage, par construction, on sait que les étages suivants seront identiques, donc on peut directement tout supprimer jusqu'à l'étage actuel */
                 hnode_t *to_free=l->head ;
-                while(to_free!=path[etage]){
+                while(to_free!=path[etage]){ /* On libère donc la mémoire occupée par la partie supérieure, puis on retourne la nouvelle liste doublement chainée */
                     hnode_t *temp=to_free->next;
                     free(to_free);
                     to_free=temp;
@@ -161,6 +178,9 @@ int hlist_remove(hlist_t *l, int v){
     }
     return compt>0;
 }
+
+
+/* Question 8 */
 
 void hlist_print(hlist_t* l){
     hnode_t* to_print = l->head ;

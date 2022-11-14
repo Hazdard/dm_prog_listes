@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#define MAX_CAP 100 
+
+/* Question 1 */
 
 typedef struct elem_s elem_t; 
 struct elem_s {
@@ -13,6 +14,14 @@ struct elem_s {
     int     prev;
 };
 
+
+/* Question 2 */
+
+#define MAX_CAP 100 
+
+
+/* Question 3 */
+
 typedef struct tlist_s tlist_t; 
 struct tlist_s {
     elem_t  tab[MAX_CAP]; 
@@ -22,6 +31,8 @@ struct tlist_s {
 };
 
 
+/* Question  4 */
+
 tlist_t *tlist_new() {
     tlist_t *l = malloc(sizeof(tlist_t));
     (l->size) = 0;
@@ -30,20 +41,25 @@ tlist_t *tlist_new() {
     return l ;
 }
 
+
+/* Question  5 */
+
 int tlist_free(tlist_t *l) {
     free(l);
     return sizeof(tlist_t);
 }
 
+
+/* Question 6 */
+
 int tlist_size(tlist_t *l){
-    int taille = 0;
-    for(int i=1 ; i<MAX_CAP ; ++i)
-        if((l->tab)[i].is_free)
-            ++taille ;
-    return taille ;
+    return l->size ;
 }
 
-int ind_libre(tlist_t *l){
+
+/* Question 7 */
+
+int ind_libre(tlist_t *l){  /* Fonction auxiliaire permettant de trouver le premier indice pour une insertion dans le tableau */
     for(int i=0 ; i<MAX_CAP ; ++i){
         if ((l->tab)[i].is_free==false)
             return i ;
@@ -54,7 +70,7 @@ int tlist_add(tlist_t* l, int a, int b) {
     if ((l->size) == MAX_CAP)
         return 1;
     else {
-        if ((l->size) == 0){
+        if ((l->size) == 0){ /* Si la liste est vide, le point est non seulement à la queue de la liste mais aussi à la tête, ce cas est donc traité à part */
             (l->first)=0 ;
             (l->last) = 0 ;
             (l->tab)[0].x=a;
@@ -81,7 +97,10 @@ int tlist_add(tlist_t* l, int a, int b) {
     }
 }
 
-/* l'entrée doit  un pointeur car sinon l'ajout ne serait pas appliqué de manière effective lors d'un appel dans une autre fonction, on a besoin de simuler un passage par référence à l'aide d'un pointeur. */
+/* L'entrée doit  un pointeur car sinon l'ajout ne serait pas appliqué de manière effective lors d'un appel dans une autre fonction, on a besoin de simuler un passage par référence à l'aide d'un pointeur. */
+
+
+/* Question  8 */
 
 int tlist_remove(tlist_t *l, int x, int y){
     for(int i=0 ; i<MAX_CAP; ++i){
@@ -102,9 +121,15 @@ int tlist_remove(tlist_t *l, int x, int y){
 return 0;
 }
 
+
+/* Question 9 */
+
 int tlist_pop(tlist_t* l){
     return(tlist_remove(l , (l->tab)[l->first].x , (l->tab)[l->first].y)) ;
 }
+
+
+/* Question 10 */
 
 int tlist_top(tlist_t* l, int *x, int *y){
     if (l->size == 0)
@@ -116,11 +141,14 @@ int tlist_top(tlist_t* l, int *x, int *y){
     }
 }
 
+
+/* Question 11 */
+
 int tlist_push(tlist_t* l, int x, int y){
     if ((l->size) == MAX_CAP)
         return 1;
     else {
-        if ((l->size) == 0){
+        if ((l->size) == 0){ /* Même remarque que pour la fonction add */
             (l->first)= 0 ;
             (l->last) = 0 ;
             (l->tab)[0].x=x;
@@ -148,23 +176,9 @@ int tlist_push(tlist_t* l, int x, int y){
 }
 
 
-int dist(elem_t a){
-    int abs=a.x;
-    int ord = a.y ;
-    return (abs*abs + ord*ord);
-}
+/* Question 12 */
 
-elem_t acces(tlist_t *l, int i){
-    int indi=-1;
-    for(int k=(l->first),compt=0;indi==-1;k=(l->tab)[k].next,++compt){
-        if (compt==i) {
-            indi=k;
-            }
-    }
-    return(l->tab[indi]);
-}
-
-int tlist_swap(tlist_t* l, int i, int j) {
+int tlist_swap(tlist_t* l, int i, int j) { /* Fonction auxiliaire pour le tri rapide permettant de permutter les i-ème et j-ème éléments de la liste */
     if ((l->size >= i) && (l->size >= j)){
         int indi=-1;
         int indj=-1;
@@ -191,7 +205,25 @@ int tlist_swap(tlist_t* l, int i, int j) {
 }
 
 
-void quick_sort(tlist_t *l, int first, int last) {
+/* Question 13 */
+
+int dist(elem_t a){
+    int abs=a.x;
+    int ord = a.y ;
+    return (abs*abs + ord*ord);
+}
+
+elem_t acces(tlist_t *l, int i){ /* Fonction auxiliaire pour le tri rapide permettant d'acceder au i-ème élément de la liste l */
+    int indi=-1;
+    for(int k=(l->first),compt=0;indi==-1;k=(l->tab)[k].next,++compt){
+        if (compt==i) {
+            indi=k;
+            }
+    }
+    return(l->tab[indi]);
+}
+
+void quick_sort(tlist_t *l, int first, int last) { /* tri rapide classique adapté pour le type particulier de tablist */
     int pivot, i, j;
     if(first < last) {    
         pivot = first;
@@ -219,6 +251,9 @@ int tlist_sort(tlist_t* l){
     return 1;
 }
 
+
+/* Question 14 */
+
 int tlist_print(tlist_t* l){
     int compt = 0 ;
     for(int i=(l->first); compt<(l->size) ; i=(l->tab)[i].next, ++compt){
@@ -229,7 +264,10 @@ int tlist_print(tlist_t* l){
     return compt;
 }
 
-elem_t extract(char* str){
+
+/* Question 15 */
+
+elem_t extract(char* str){ /* Fonction auxiliaire pour le main permettant de correctement récupérer l'entrée fournie par l'utilisateur */
     int taille_abs=0 ;
     int taille_ord=0 ;
     bool avant=true;
@@ -273,5 +311,3 @@ int main(int argc, char* argv[]) { /* Le passage en argument se fait de la faço
     tlist_free(l);
     return 0 ;
 }
-
-
